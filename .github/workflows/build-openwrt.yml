@@ -56,6 +56,9 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        rm -rf openwrt/tools/cmake/patches
+        cp /home/runner/work/SOpenWrt/SOpenWrt/cmakepatches openwrt/tools/cmake/patches
+        ls -la openwrt/tools/cmake/patches
         cp /home/runner/work/SOpenWrt/SOpenWrt/toolsCmakeMakefile openwrt/tools/cmake/Makefile
 
     - name: Load custom feeds
