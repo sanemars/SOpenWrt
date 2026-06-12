@@ -57,6 +57,7 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         [ -f $GITHUB_WORKSPACE/toolsCmakeMakefile ] && cp $GITHUB_WORKSPACE/toolsCmakeMakefile openwrt/tools/cmake/Makefile
+        cat openwrt/tools/cmake/Makefile
         echo "CMake Makefile replaced"
 
     - name: Load custom feeds
@@ -67,7 +68,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
+      run: cd openwrt && ./scripts/feeds update -a && cat tools/cmake/Makefile
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
