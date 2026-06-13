@@ -65,9 +65,9 @@ jobs:
         ls -la openwrt/tools/cmake/patches
         cp toolsCmakeMakefile openwrt/tools/cmake/Makefile
         cp zzz-default-settings openwrt/package/lean/default-settings/files/zzz-default-settings
-        cat tools/cmake/Makefile
+        cat openwrt/tools/cmake/Makefile
         echo "========="
-        cat package/lean/default-settings/files/zzz-default-settings
+        cat openwrt/package/lean/default-settings/files/zzz-default-settings
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
