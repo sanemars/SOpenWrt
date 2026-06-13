@@ -64,37 +64,19 @@ jobs:
         cp -r cmakepatches openwrt/tools/cmake/patches
         ls -la openwrt/tools/cmake/patches
         cp toolsCmakeMakefile openwrt/tools/cmake/Makefile
+        cp zzz-default-settings openwrt/package/lean/default-settings/files/zzz-default-settings
+        cat tools/cmake/Makefile
+        echo "========="
+        cat package/lean/default-settings/files/zzz-default-settings
         chmod +x $DIY_P1_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a && cat tools/cmake/Makefile
+      run: cd openwrt && ./scripts/feeds update -a
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
-
-    # ===== 修复 gn 编译错误：std::ranges::unique 在 GCC 12/13 中 bug =====
-    - name: Fix gn ranges::unique bug for GCC 12/13
-      run: |
-        GN_PATCH_DIR="openwrt/feeds/helloworld/gn/patches"
-        mkdir -p "$GN_PATCH_DIR"
-        cat > "$GN_PATCH_DIR/010-gn-fix-ranges-unique.patch" << 'PATCH_EOF'
-        --- a/src/gn/rust_project_writer.cc
-        +++ b/src/gn/rust_project_writer.cc
-        @@ -218,8 +218,8 @@ RustProjectWriter::Crate RustProjectWriter::ParseCrate(
-           std::ranges::sort(include_dirs, [](const auto& lhs, const auto& rhs) {
-             return lhs.value() < rhs.value();
-           });
-        -  include_dirs.erase(std::ranges::unique(include_dirs).begin(),
-        -                     include_dirs.end());
-        +  include_dirs.erase(std::unique(include_dirs.begin(), include_dirs.end()),
-        +                     include_dirs.end());
-
-           Crate crate = Crate(crate_root, include_dirs, crate_id, crate_label,
-                               edition.value_or("2015"));
-        PATCH_EOF
-        echo "Applied gn patch for GCC 12/13 compatibility"
         
     - name: Load custom configuration
       run: |
